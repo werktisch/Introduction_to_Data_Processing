@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../marp_theme"
+		},
+		{
+			"path": "../markdown_pdf_theme"
+		}
+	],
+	"settings": {
+		"markdown-pdf.styles": [
+			"../markdown_pdf_theme/markdown-pdf.css"
+		],
+	}
+}
