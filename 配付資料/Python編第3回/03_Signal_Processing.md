@@ -1,5 +1,5 @@
 ---
-marp: true
+marp: false
 theme: werktisch
 size: 1:1
 paginate: true
@@ -23,7 +23,7 @@ TODO: 予約後を追加
 _class: title
 _paginate: false
 -->
-# 第2回 波形処理
+# 第3回 ファイル入出力、<br>信号処理、視覚化
 
 ---
 ## 本日のメニュー
@@ -54,19 +54,19 @@ _paginate: false
     - 実は改行コードも...←解決した？
 
 ---
-## ファイルのアップロード
+## 1. ファイルのアップロード
 - 右上の「接続」をクリックしてバックエンドに接続
 - RAM、ディスクと表示されるまで待機
 ![connect](../../images/connect.png)
 
 ---
-## ファイルのアップロード
+## 1. ファイルのアップロード
 1. ファイルペインを開く
 1. ファイルをドラッグアンドドロップ
 ![file](../../images/file.png)
 
 ---
-## csvファイルの読み書き
+## 2. csvファイルの読み書き
 ```python
 # 読み込み
 ndarray = np.loadtxt(file_name,
@@ -102,7 +102,7 @@ np.savetxt(save_file_name,
     - イベントハンドリング
 
 ---
-## bokehによる視覚化
+## 3. bokehによる視覚化
 ```python
 from bokeh.io import output_notebook, show
 from bokeh.plotting import figure
@@ -117,7 +117,7 @@ show(fig) # グラフを表示
 ---
 ## 整流処理
 ---
-## 全波整流
+## 4. 全波整流
 - 全ての値を正にする方法（絶対値）
 $$ |e(t)| = \sqrt{\{e(t)\}^2} $$
 $$ |E| = \sqrt{{e_n}^2} $$
@@ -131,14 +131,13 @@ $$ |E| = \sqrt{{e_n}^2} $$
 - （実効値）
 1. 二乗して符号をなくす
 1. 移動平均をとって平滑化
-    - 50〜100程度（区間数）のデータを平均
-    （経験的な値）
+    - 50〜100（サンプリング周波数の$\frac{1}{20}$〜$\frac{1}{10}$）程度（区間数）のデータを平均（経験的な値）
 1. 平方根で次元を戻す
 $$ RMS[e(t)] = \sqrt{\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\{e(t + \tau)\}^2d\tau} $$
 $$ RMS[E] = \sqrt{\frac{1}{K}\sum_{k=n-\frac{K}{2}}^{n+\frac{K}{2}}{e_k}^2} $$
 
 ---
-## RMS
+## 5. RMS
 - 二乗 [numpy.square](https://numpy.org/doc/stable/reference/generated/numpy.square.html)(data)
 - 平方根 [numpy.sqrt](https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html)(data)
 
@@ -161,7 +160,7 @@ print(sqrt)
 ---
 #### 電圧の二乗（おまけ）
 - 電力(Power)
-    - 単位時間あたりの仕事量
+    - 単位時間あたりの仕事量（仕事率）
     - 単位: W （ワット）
 
 $$ \begin{split}
@@ -204,12 +203,12 @@ Ave.    &= \frac{a + b + c}{3} \\
 \end{split} $$
 
 ---
-#### 2.3. 畳み込み
+#### 6. 畳み込み
 numpy.convolve(a, v, mode)
 ![width:1000](../../images/convolve.svg)
 
 ---
-### 2.4. RMS
+### 7. RMS
 ```python
 N = 51 # 区間数
 if N % 2 == 0: # 偶数の場合は1を足す
@@ -222,8 +221,10 @@ rms = np.sqrt(np.convolve(np.square(emg), v, mode='same'))
 - 畳み込み `numpy.convolve(a, v, mode='same')`
 - 平方根 `numpy.sqrt(data)`
 
+注）RMSはデータの始めと終わりに使えない部分が<br>できるので、解析範囲を切り出す前にかけること
+
 ---
-## 振幅正規化
+## 8. 振幅正規化
 
 何らかの基準となるデータを1または100%とした表現
 
@@ -235,7 +236,7 @@ rms = np.sqrt(np.convolve(np.square(emg), v, mode='same'))
     - 被検者の身長・体重のどちらかまたは両方
 
 ---
-### 最大随意収縮による正規化
+### 8. 最大随意収縮による正規化
 
 - 最大随意収縮データの最大値を求める（MVC）
 - 動作データをMVCで割り、100を掛ける
@@ -246,7 +247,7 @@ percent_mvc = emg / mvc_value * 100
 ```
 
 ---
-## 時間正規化
+## 9. 時間正規化
 - 任意の時間で正規化
     - 動作の開始から終了まで
     - 1周期
@@ -276,6 +277,54 @@ percent_time = np.arange(number_of_samples) / (number_of_samples - 1) * 100
 
 - データ数 11
 - 時刻 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+
+--- 
+## 10. ndarrayの連結
+- numpy.vstack(ndarrayのタプル) 縦に重ねる
+- numpy.hstack(ndarrayのタプル) 横に繋げる
+```python
+a = np.arange(3)
+b = np.arange(3, 6)
+print(f'変数a: {a}')
+print(f'変数b: {b}', end='\n\n')
+
+v = np.vstack((a, b))
+h = np.hstack((a, b))
+print(f'vstack:\n{v}\n')
+print(f'hstack:\n{h}')
+```
+```python
+変数a: [0 1 2]
+変数b: [3 4 5]
+
+vstack:
+[[0 1 2]
+ [3 4 5]]
+
+hstack:
+[0 1 2 3 4 5]
+```
+
+---
+##10. ndarrayの転置
+- 転置：行と列を入れ替える
+```python
+data = np.arange(6).reshape((2, 3))
+print(f'元のデータ:\n{data}\n')
+
+data_t = data.T
+print(f'転置したデータ:\n{data_t}')
+```
+```python
+元のデータ:
+[[0 1 2]
+ [3 4 5]]
+
+転置したデータ:
+[[0 3]
+ [1 4]
+ [2 5]]
+ ```
 
 ---
 <!--

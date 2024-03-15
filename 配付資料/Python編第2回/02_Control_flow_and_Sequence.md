@@ -375,7 +375,7 @@ dimension number:  3	dimension:  (3, 2, 2)
   [10 11]]]
 ```
 
----
+--- 
 ## ndarrayの連結
 - numpy.vstack(ndarrayのタプル) 縦に重ねる
 - numpy.hstack(ndarrayのタプル) 横に繋げる
