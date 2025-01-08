@@ -1,5 +1,5 @@
 ---
-marp: false
+marp: true
 theme: werktisch
 size: 1:1
 paginate: true
@@ -137,6 +137,20 @@ $$ RMS[e(t)] = \sqrt{\frac{1}{T}\int_{-\frac{T}{2}}^{\frac{T}{2}}\{e(t + \tau)\}
 $$ RMS[E] = \sqrt{\frac{1}{K}\sum_{k=n-\frac{K}{2}}^{n+\frac{K}{2}}{e_k}^2} $$
 
 ---
+#### 電圧の二乗（おまけ）
+- 電力(Power)
+    - 単位時間あたりの仕事量（仕事率）
+    - 単位: W （ワット）
+
+$$ \begin{split}
+電力 = 電圧^2 \times 抵抗 \\
+\because 抵抗は一定
+\end{split} $$
+
+- 抵抗が一定ならば
+    電圧の二乗は電力と相似
+
+---
 ## 5. RMS
 - 二乗 [numpy.square](https://numpy.org/doc/stable/reference/generated/numpy.square.html)(data)
 - 平方根 [numpy.sqrt](https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html)(data)
@@ -156,20 +170,6 @@ print(sqrt)
 [ 0  1  4  9 16]
 [0. 1. 2. 3. 4.]
 ```
-
----
-#### 電圧の二乗（おまけ）
-- 電力(Power)
-    - 単位時間あたりの仕事量（仕事率）
-    - 単位: W （ワット）
-
-$$ \begin{split}
-電力 = 電圧^2 \times 抵抗 \\
-\because 抵抗は一定
-\end{split} $$
-
-- 抵抗が一定ならば
-    電圧の二乗は電力と相似
 
 ---
 #### 移動平均 区間数3の例
